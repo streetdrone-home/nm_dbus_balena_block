@@ -1,0 +1,21 @@
+name: NM D-BUS
+description: >-
+  Configure networks with NetworkManager through D-BUS
+version: 1.0.0
+type: sw.block
+assets:
+  repository:
+    type: blob.asset
+    data:
+      url: 'https://github.com/streetdrone-home/nm_dbus_balena_block'
+  logo:
+    type: blob.asset
+    data:
+      url: 'https://raw.githubusercontent.com/NetworkManager/NetworkManager/main/contrib/art/logo/nm_logo.svg'
+data:
+  defaultDeviceType: generic-amd64
+  supportedDeviceTypes:
+    - generic
+    - generic-amd64
+    - genericx86-64-ext
+    - intel-nuc
