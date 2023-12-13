@@ -93,6 +93,10 @@ def load_configuration():
 def add_and_activate_connection(client, glib_loop, name, iface, method, ipv4=None):
     connection = create_connection(name, iface, method, ipv4)
     device = client.get_device_by_iface(iface)
+    if not device:
+        logging.error(f"Could not get device by iface: {iface}")
+        return
+
     client.add_and_activate_connection_async(
         connection, device, None, None, add_and_activate_cb, glib_loop
     )
