@@ -1,7 +1,7 @@
 name: NM D-BUS
 description: >-
   Configure networks with NetworkManager through D-BUS
-version: 1.0.1
+version: 1.1.0
 type: sw.block
 assets:
   repository:
