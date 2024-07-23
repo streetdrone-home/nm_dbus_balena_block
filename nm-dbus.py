@@ -2,8 +2,9 @@
 
 import logging
 import os
-from pathlib import Path
 import socket
+from argparse import ArgumentParser
+from pathlib import Path
 from typing import Optional
 
 import gi
@@ -13,7 +14,7 @@ gi.require_version("NM", "1.0")
 from gi.repository import GLib, NM
 
 
-def main():
+def main(args):
     logging.basicConfig(level=logging.INFO)
 
     client = NM.Client.new(None)
@@ -25,7 +26,7 @@ def main():
 
     connection_ids = get_existing_connection_ids(client)
 
-    config = load_configuration()
+    config = load_configuration(args)
     logging.info("Got configuration:")
     logging.info(config)
 
@@ -68,17 +69,19 @@ def get_existing_connection_ids(client):
     return [c.get_id() for c in connections]
 
 
-def load_configuration():
+def load_configuration(args):
     config_yaml = os.environ.get("NM_DBUS_CONFIG")
 
     if not config_yaml:
+        config_file = args.config
         logging.info(
-            "Configuration not found in environment variable 'NM_DBUS_CONFIG'. Will try to load /nm-dbus.yaml instead."
+            "Configuration not found in environment variable 'NM_DBUS_CONFIG'. "
+            f"Will try to load '{config_file}' instead."
         )
-        config_path = Path("/nm-dbus.yaml")
+        config_path = Path(config_file)
         if not config_path.is_file():
             raise RuntimeError(
-                "File '/nm-dbus.yaml' not found; could not load any configuration!"
+                f"File '{config_path}' not found; could not load any configuration!"
             )
 
         config_yaml = config_path.read_text()
@@ -137,4 +140,8 @@ def add_and_activate_cb(client, result, glib_loop):
 
 
 if __name__ == "__main__":
-    main()
+    parser = ArgumentParser()
+    parser.add_argument("--config", default="/nm-dbus.yaml")
+    args = parser.parse_args()
+    
+    main(args)
